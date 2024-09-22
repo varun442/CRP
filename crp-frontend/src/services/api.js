@@ -104,6 +104,62 @@ export const updateUserPoints = async (userId, pointsData) => {
   return response.data;
 };
 
+// Add these functions to your existing api.js file
+
+// Fetch pending events
+export const getPendingEvents = async () => {
+  try {
+    const response = await api.get("/events/pending");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching pending events:", error);
+    throw error;
+  }
+};
+
+// Fetch approved events
+export const getApprovedEvents = async () => {
+  try {
+    const response = await api.get("/events/approved");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching approved events:", error);
+    throw error;
+  }
+};
+
+// Fetch rejected events
+export const getRejectedEvents = async () => {
+  try {
+    const response = await api.get("/events/rejected");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching rejected events:", error);
+    throw error;
+  }
+};
+
+// Approve an event
+export const approveEvent = async (eventId) => {
+  try {
+    const response = await api.post(`/events/approve/${eventId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error approving event:", error);
+    throw error;
+  }
+};
+
+// Reject an event
+export const rejectEvent = async (eventId, rejectionReason) => {
+  try {
+    const response = await api.post(`/events/reject/${eventId}`, { rejectionReason });
+    return response.data;
+  } catch (error) {
+    console.error("Error rejecting event:", error);
+    throw error;
+  }
+};
 // Add more API functions as needed
 
 export default api;

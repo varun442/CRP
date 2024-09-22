@@ -1,3 +1,4 @@
+
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -7,6 +8,7 @@ import UserDashboard from './pages/UserDashboard';
 import EventPage from './pages/EventPage';
 import NavBar from "./components/NavBar";
 import ForumFeed from "./components/Forum";
+
 
 const ProtectedRoute = ({children, allowedRoles}) => {
     const userRole = localStorage.getItem('user');
@@ -24,6 +26,7 @@ const ProtectedRoute = ({children, allowedRoles}) => {
 };
 
 function App() {
+
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [points, setPoints] = useState(0);  // You might want to load this from somewhere
     const maxPoints = 1000;  // This could be dynamic

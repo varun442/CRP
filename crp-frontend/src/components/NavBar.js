@@ -104,3 +104,5 @@ const NavBar = ({ isLoggedIn, points, maxPoints }) => {
 }
 
 export default NavBar
+
+
