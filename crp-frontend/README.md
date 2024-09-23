@@ -1,6 +1,45 @@
-# Getting Started with Create React App
+# Community Restoration Project Frontend
+
+## About The Project
+
+The Community Restoration Project (TCRP) is a housing program with multiple locations throughout Atlanta. This frontend application aims to improve communication and build a social network connection within the community at each location.
+
+### Mission
+
+The mission of The Community Restoration Project is to provide families and individuals the resources to live productive lives. This application supports that mission by facilitating community engagement and resource sharing.
+
+### Key Features
+
+- Community forum for neighbor interactions
+- Event organization and advertising
+- Issue reporting system for locations or units
+- Resource sharing platform
+- Safe space for community members
+- Simple ways to connect with neighbors (e.g., coffee meetups)
+
+## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+### Prerequisites
+
+- Node.js (version 12.0 or later)
+- npm (usually comes with Node.js)
+
+### Installation
+
+1. Clone the repository
+   ```sh
+   git clone https://github.com/your-username/community-restoration-project-frontend.git
+   ```
+2. Navigate to the project directory
+   ```sh
+   cd community-restoration-project-frontend
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
 
 ## Available Scripts
 
@@ -39,32 +78,37 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+(Here, you can add information about your project's folder structure and main components)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Design Considerations
 
-### Code Splitting
+- User-friendly interface suitable for users with varying levels of tech-savviness
+- Responsive design for accessibility on various devices
+- Emphasis on creating a safe and welcoming digital space
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributing
 
-### Analyzing the Bundle Size
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Distributed under the MIT License. See `LICENSE` for more information.
 
-### Advanced Configuration
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Your Name - your.email@example.com
 
-### Deployment
+Project Link: [https://github.com/your-username/community-restoration-project-frontend](https://github.com/your-username/community-restoration-project-frontend)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Acknowledgements
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started)
+- [React documentation](https://reactjs.org/)
