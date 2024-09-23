@@ -5,7 +5,7 @@ const dummyPosts = [
         content: "Hello everyone! This is our first post on the new Community Restoration Project forum. We're excited to start building connections and fostering community engagement. Feel free to introduce yourselves and share your ideas for community improvement!",
         author: {
             _id: "66efdfac306057572b7829a3",
-            username: "CRPAdmin"
+            username: "CRP Admin"
         },
         likes: [
             "66efdfab306057572b782999",
@@ -21,7 +21,7 @@ const dummyPosts = [
                 _id: "66efdfae306057572b7829ea",
                 author: {
                     _id: "66efdfac306057572b7829a1",
-                    username: "JaneNeighbor"
+                    username: "Jane Neighbor"
                 },
                 content: "This is fantastic! I'm looking forward to connecting with everyone and working together to improve our community.",
                 likes: ["66efdfab306057572b782999"],
@@ -39,7 +39,7 @@ const dummyPosts = [
         content: "Join us this Saturday for a community-wide cleanup event! We'll be meeting at Central Park at 9 AM. Gloves and trash bags will be provided. Let's work together to keep our neighborhood beautiful!",
         author: {
             _id: "66efdfac306057572b7829a4",
-            username: "EventCoordinator"
+            username: "Event Coordinator"
         },
         likes: [
             "66efdfab306057572b782998",
@@ -51,7 +51,7 @@ const dummyPosts = [
                 _id: "66efdfae306057572b7829eb",
                 author: {
                     _id: "66efdfac306057572b7829a2",
-                    username: "GreenThumb"
+                    username: "Green Thumb"
                 },
                 content: "Count me in! I'll bring some extra gardening tools in case we need them.",
                 likes: [],
@@ -69,7 +69,7 @@ const dummyPosts = [
         content: "We're looking to expand our offerings at the Community Center. What kinds of classes or programs would you like to see? Share your ideas and let's make our center a hub of learning and growth!",
         author: {
             _id: "66efdfac306057572b7829a5",
-            username: "ProgramDirector"
+            username: "Program Director"
         },
         likes: [
             "66efdfab306057572b78299a",
@@ -100,7 +100,7 @@ const dummyPosts = [
         content: "I noticed that one of the swings in Oakwood Playground is broken. It could be dangerous for children. Can we get this fixed soon?",
         author: {
             _id: "66efdfac306057572b7829a6",
-            username: "ConcernedParent"
+            username: "Concerned Parent"
         },
         likes: [
             "66efdfab306057572b78299b",
@@ -111,7 +111,7 @@ const dummyPosts = [
                 _id: "66efdfae306057572b7829ed",
                 author: {
                     _id: "66efdfac306057572b7829a4",
-                    username: "MaintenanceCrew"
+                    username: "Maintenance Crew"
                 },
                 content: "Thank you for reporting this. We'll send a team to inspect and repair the swing tomorrow morning.",
                 likes: ["66efdfac306057572b7829a6"],
@@ -129,7 +129,7 @@ const dummyPosts = [
         content: "Our next town hall meeting is coming up on the 15th. What topics would you like to see on the agenda? This is your chance to bring up important community matters!",
         author: {
             _id: "66efdfac306057572b7829a3",
-            username: "CRPAdmin"
+            username: "CRP Admin"
         },
         likes: [
             "66efdfab306057572b782999",
