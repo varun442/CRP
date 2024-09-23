@@ -30,7 +30,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. Clone the repository
    ```sh
-   git clone https://github.com/your-username/community-restoration-project-frontend.git
+   git clone https://github.com/varun442/CRP.git
    ```
 2. Navigate to the project directory
    ```sh
@@ -104,9 +104,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - your.email@example.com
+Your Name - patibandlasaipranithedu@gmail.com
 
-Project Link: [https://github.com/your-username/community-restoration-project-frontend](https://github.com/your-username/community-restoration-project-frontend)
+Project Link: https://github.com/varun442/CRP.git
 
 ## Acknowledgements
 
