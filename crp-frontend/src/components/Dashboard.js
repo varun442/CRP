@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Home, CalendarDays, MessageSquare, Bell, Users, Star,
-  Coffee, HandHeart, AlertTriangle, Plus, MoreVertical, Trophy
+  Star, CalendarDays, AlertTriangle, Coffee, HandHeart, Plus
 } from 'lucide-react';
 import Leaderboard from './LeaderBoard';
-
-import { fetchUsers } from '../services/api';
-
-// Assume this function fetches user data from your API
-
+import UpcomingEvents from './UpcomingEvents';
+import { fetchUsers, getEvents } from '../services/api';
 
 const Dashboard = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [users, setUsers] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadData = async () => {
       try {
-        const data = await fetchUsers();
-        // Sort users by points in descending order
-        console.log(data);
-        
-        const sortedUsers = data.sort((a, b) => b.points - a.points);
-        console.log(sortedUsers);
-        
+        const [userData, eventsData] = await Promise.all([
+          fetchUsers(),
+          getEvents()
+        ]);
+        const sortedUsers = userData.sort((a, b) => b.points - a.points);
         setUsers(sortedUsers);
+        setEvents(eventsData);
+        console.log(eventsData);
+        
         setLoading(false);
       } catch (err) {
-        setError('Failed to load users');
+        setError('Failed to load data');
         setLoading(false);
       }
     };
 
-    loadUsers();
+    loadData();
   }, []);
 
   const features = [
@@ -44,19 +42,10 @@ const Dashboard = () => {
     { title: 'Issue', icon: <AlertTriangle className="w-6 h-6" />, link: '/messages' },
   ];
 
-  const upcomingEvents = [
-    { id: 1, title: 'Town Hall Meeting', date: '2023-04-15', time: '18:00' },
-    { id: 2, title: 'Community Cleanup', date: '2023-04-22', time: '09:00' },
-    { id: 3, title: 'Neighbor Meet & Greet', date: '2023-04-29', time: '14:00' },
-  ];
-
   const neighborhoodIssues = [
     { id: 1, title: 'Broken streetlight on Oak St', status: 'In Progress' },
     { id: 2, title: 'Playground equipment needs repair', status: 'Reported' },
   ];
-
-  
-  
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
@@ -88,33 +77,13 @@ const Dashboard = () => {
             </div>
 
             {/* Upcoming Events */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Upcoming Events</h2>
-                <button className="text-blue-600 hover:text-blue-800">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
-              </div>
-              <ul className="space-y-4">
-                {upcomingEvents.map((event) => (
-                  <li key={event.id} className="flex items-start">
-                    <div className="bg-blue-100 rounded-full p-2 mr-4">
-                      <CalendarDays className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{event.title}</h3>
-                      <p className="text-sm text-gray-600">{`${event.date} at ${event.time}`}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <Link to="/events">
-              <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                View All Events
-              </button>
-              </Link>
-              
-            </div>
+            {loading ? (
+              <div className="text-center">Loading events...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">{error}</div>
+            ) : (
+              <UpcomingEvents events={events} />
+            )}
 
             {/* Connect with Neighbors */}
             <div className="bg-white rounded-lg shadow-lg p-6">

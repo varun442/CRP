@@ -1,44 +1,48 @@
 import React from 'react';
-import { Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, Award } from 'lucide-react';
 
 const EventCard = ({ event }) => {
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   return (
-    <div className="max-w-sm rounded-xl overflow-hidden shadow-lg bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
       <div className="relative">
-        <img className="w-full h-48 object-cover" src="https://www.eventbrite.ie/blog/wp-content/uploads/2022/09/dance-event-768x511.jpg" alt={event.title} />
+        <img 
+          src="https://www.eventbrite.ie/blog/wp-content/uploads/2022/09/dance-event-768x511.jpg" 
+          alt={event.title} 
+          className="w-full h-48 object-cover"
+        />
         <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 m-2 rounded-full">
-          {event.type}
+          {event.type.replace('_', ' ')}
+        </div>
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <button className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+            RSVP Now
+          </button>
         </div>
       </div>
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2 text-gray-800">{event.title}</div>
-        <p className="text-gray-600 text-sm mb-4">{event.description}</p>
-        <div className="flex items-center mb-2 text-sm text-gray-600">
+      <div className="p-4">
+        <h3 className="font-bold text-lg mb-2 text-gray-800">{event.title}</h3>
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{event.description}</p>
+        <div className="flex items-center text-sm text-gray-600 mb-1">
           <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-          <span>{formatDate(event.date)}</span>
+          {formatDate(event.date)}
         </div>
-        <div className="flex items-center mb-2 text-sm text-gray-600">
+        <div className="flex items-center text-sm text-gray-600 mb-2">
           <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-          <span>{event.location}</span>
+          {event.location}
         </div>
-        <div className="flex items-center mb-2 text-sm text-gray-600">
+        <div className="flex items-center text-sm text-gray-600 mb-2">
           <Users className="w-4 h-4 mr-2 text-blue-600" />
-          <span>{event.attendees.length} / {event.maxAttendees} Attendees</span>
+          {event.attendees.length} / {event.maxAttendees || '∞'} attendees
         </div>
-        <div className="flex items-center text-sm text-gray-600">
-          <Clock className="w-4 h-4 mr-2 text-blue-600" />
-          <span>Points Reward: {event.pointsReward}</span>
+        <div className="flex items-center text-sm text-green-600 font-semibold">
+          <Award className="w-4 h-4 mr-2" />
+          Earn {event.pointsReward} points for attending!
         </div>
-      </div>
-      <div className="px-6 py-4 bg-gray-100">
-        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out">
-          RSVP Now
-        </button>
       </div>
     </div>
   );

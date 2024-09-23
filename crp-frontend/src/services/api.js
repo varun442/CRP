@@ -60,6 +60,7 @@ export const signup = async (userData) => {
 };
 export const getEvents = async () => {
   const response = await api.get("/events");
+  console.log(response);
   return response.data;
 };
 export const createEvent = async (eventData) => {

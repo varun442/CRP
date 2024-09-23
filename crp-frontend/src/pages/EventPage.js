@@ -141,7 +141,7 @@ const EventPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NavBar />
+
       <main className="flex-grow py-8 max-w-8l mx-auto w-full">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-blue-600">Community Events</h1>

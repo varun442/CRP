@@ -1,8 +1,9 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-import {ArrowRight, Calendar, Home as HomeIcon, Users} from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Calendar, Home as HomeIcon, Users, MessageCircle, X, Send, Bot } from 'lucide-react';
 import Footer from '../components/Footer';
 import EventCard from '../components/EventCard';
+import { generateResponse } from '../services/geminiAPI';
 
 const events = [
     {
@@ -38,20 +39,52 @@ const events = [
 ];
 
 const HomePage = () => {
-    return (
-        <div className="flex flex-col min-h-screen">
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [inputMessage, setInputMessage] = useState('Explain about your app');
+    const messagesEndRef = useRef(null);
 
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(scrollToBottom, [messages]);
+
+    const handleChatToggle = () => {
+        setIsChatOpen(!isChatOpen);
+        if (!isChatOpen && messages.length === 0) {
+            setMessages([{ 
+                text: "Hi there! I'm Restore Connect, an AI assistant for the Community Restoration Project app. How can I help you today?", 
+                sender: 'bot' 
+            }]);
+        }
+    };
+
+    const handleSendMessage = async () => {
+        if (inputMessage.trim() === '') return;
+    
+        setMessages([...messages, { text: inputMessage, sender: 'user' }]);
+        setInputMessage('');
+    
+        try {
+            const response = await generateResponse(inputMessage);
+            setMessages(prevMessages => [...prevMessages, { text: response, sender: 'bot' }]);
+        } catch (error) {
+            console.error('Error calling Gemini API:', error);
+            setMessages(prevMessages => [...prevMessages, { text: "Sorry, I couldn't process your request.", sender: 'bot' }]);
+        }
+    };
+
+    return (
+        <div className="flex flex-col min-h-screen relative">
             {/* Hero Section */}
             <section className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-20">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-center justify-between">
                         <div className="md:w-1/2 mb-8 md:mb-0">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-4">Building Stronger Communities
-                                Together</h1>
-                            <p className="text-xl mb-6">Join us in creating a vibrant, connected neighborhood where
-                                everyone thrives.</p>
-                            <Link to="/signup"
-                                  className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-blue-100 transition duration-300">
+                            <h1 className="text-4xl md:text-5xl font-bold mb-4">Building Stronger Communities Together</h1>
+                            <p className="text-xl mb-6">Join us in creating a vibrant, connected neighborhood where everyone thrives.</p>
+                            <Link to="/signup" className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-blue-100 transition duration-300">
                                 Get Involved
                             </Link>
                         </div>
@@ -69,11 +102,11 @@ const HomePage = () => {
                 {/* Featured Quote */}
                 <div className="text-center mb-16">
                     <blockquote className="text-2xl text-gray-600 mb-4">
-                        "The greatness of a community is most accurately measured by the compassionate actions of its
-                        members."
+                        "The greatness of a community is most accurately measured by the compassionate actions of its members."
                     </blockquote>
                     <p className="text-gray-500">- Coretta Scott King</p>
                 </div>
+
                 {/* Upcoming Events Section */}
                 <section>
                     <h2 className="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
@@ -83,12 +116,12 @@ const HomePage = () => {
                         ))}
                     </div>
                     <div className="text-center mt-8">
-                        <Link to="/events"
-                              className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+                        <Link to="/events" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold">
                             View All Events <ArrowRight size={20} className="ml-2"/>
                         </Link>
                     </div>
                 </section>
+
                 {/* Features Section */}
                 <section className="mb-16 pt-50">
                     <h2 className="text-3xl font-bold mb-8 text-center">Why Join Our Community?</h2>
@@ -96,8 +129,7 @@ const HomePage = () => {
                         <div className="text-center">
                             <Calendar size={48} className="mx-auto mb-4 text-blue-600"/>
                             <h3 className="text-xl font-semibold mb-2">Engaging Events</h3>
-                            <p className="text-gray-600">Participate in a variety of community events and
-                                activities.</p>
+                            <p className="text-gray-600">Participate in a variety of community events and activities.</p>
                         </div>
                         <div className="text-center">
                             <Users size={48} className="mx-auto mb-4 text-blue-600"/>
@@ -111,11 +143,60 @@ const HomePage = () => {
                         </div>
                     </div>
                 </section>
-
-
             </main>
 
-            <Footer/>
+            <Footer />
+
+            {/* Chat Button */}
+            <button
+                className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300"
+                onClick={handleChatToggle}
+            >
+                <Bot size={32} />
+            </button>
+
+            {/* Chat Window */}
+            {isChatOpen && (
+                <div className="fixed bottom-24 right-4 w-96 bg-white rounded-lg shadow-xl flex flex-col">
+                    <div className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-t-lg">
+                        <h3 className="font-semibold text-lg flex items-center">
+                            <Bot size={24} className="mr-2" />
+                            Restore Connect
+                        </h3>
+                        <button onClick={handleChatToggle} className="text-white hover:text-gray-200">
+                            <X size={24} />
+                        </button>
+                    </div>
+                    <div className="flex-grow overflow-y-auto p-4 h-96">
+                        {messages.map((message, index) => (
+                            <div key={index} className={`mb-4 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                                <span className={`inline-block p-3 rounded-lg ${message.sender === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                                    {message.text}
+                                </span>
+                            </div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </div>
+                    <div className="p-4 border-t">
+                        <div className="flex items-center">
+                            <input
+                                type="text"
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                placeholder="Type a message..."
+                                className="flex-grow p-3 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            />
+                            <button
+                                onClick={handleSendMessage}
+                                className="bg-blue-600 text-white p-3 rounded-r-lg hover:bg-blue-700 transition duration-300"
+                            >
+                                <Send size={24} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

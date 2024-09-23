@@ -1,9 +1,14 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material';
-import { CalendarDays, Clock, MapPin, CheckCircle, XCircle } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, Users, Award, CheckCircle, XCircle } from 'lucide-react';
 
 const EventsPageCard = ({ event, onApprove, onReject, showActions }) => {
   const eventDate = new Date(event.date);
+
+  const formatDate = (date) => {
+    const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString('en-US', options);
+  };
 
   return (
     <Card className="flex flex-col sm:flex-row h-full rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl m-5">
@@ -20,65 +25,81 @@ const EventsPageCard = ({ event, onApprove, onReject, showActions }) => {
           size="small"
           className="absolute top-2 left-2"
         />
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <Button
+            variant="contained"
+            color="primary"
+            className="transform hover:scale-105 transition duration-300"
+          >
+            RSVP Now
+          </Button>
+        </div>
       </Box>
 
       {/* Right side - Event Information */}
       <CardContent className="sm:w-2/3 p-4 flex flex-col justify-between">
         <Box>
-          <Typography variant="h6" className="font-bold text-blue-600 mb-2">
+          <Typography variant="h5" className="font-bold text-gray-800 mb-2">
             {event.title}
           </Typography>
-          <Box className="flex items-center mb-1">
-            <CalendarDays className="mr-2 text-gray-500" size={16} />
+          <Typography variant="body2" className="text-gray-600 mb-3 line-clamp-2">
+            {event.description}
+          </Typography>
+          <Box className="flex items-center mb-1 text-sm text-gray-600">
+            <CalendarDays className="mr-2 text-blue-600" size={16} />
             <Typography variant="body2">
-              {eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+              {formatDate(eventDate)}
             </Typography>
           </Box>
-          <Box className="flex items-center mb-1">
-            <Clock className="mr-2 text-gray-500" size={16} />
-            <Typography variant="body2">
-              {eventDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-            </Typography>
-          </Box>
-          <Box className="flex items-center mb-2">
-            <MapPin className="mr-2 text-gray-500" size={16} />
+          <Box className="flex items-center mb-1 text-sm text-gray-600">
+            <MapPin className="mr-2 text-blue-600" size={16} />
             <Typography variant="body2">
               {event.location}
             </Typography>
           </Box>
+          <Box className="flex items-center mb-1 text-sm text-gray-600">
+            <Users className="mr-2 text-blue-600" size={16} />
+            <Typography variant="body2">
+              {event.attendees?.length || 0} / {event.maxAttendees || '∞'} attendees
+            </Typography>
+          </Box>
+          <Box className="flex items-center text-sm text-green-600 font-semibold">
+            <Award className="mr-2" size={16} />
+            <Typography variant="body2">
+              Earn {event.pointsReward} points for attending!
+            </Typography>
+          </Box>
         </Box>
         
-        <Box className="flex justify-between items-center mt-2">
+        <Box className="flex justify-between items-center mt-4">
           <Chip 
             label={event.type.replace('_', ' ')}
-            color={event.type === 'town_hall' ? 'success' : event.type === 'volunteer_opportunity' ? 'warning' : 'error'}
+            color={event.type === 'town_hall' ? 'success' : event.type === 'volunteer_opportunity' ? 'warning' : 'info'}
             size="small"
           />
-          <Typography variant="subtitle1" className="font-semibold text-green-600">
-            {event.pointsReward ? `${event.pointsReward} Points` : 'Free'}
-          </Typography>
+          {showActions && (
+            <Box className="flex space-x-2">
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CheckCircle size={16} />}
+                onClick={() => onApprove(event._id)}
+                size="small"
+              >
+                Approve
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<XCircle size={16} />}
+                onClick={() => onReject(event._id)}
+                size="small"
+              >
+                Reject
+              </Button>
+            </Box>
+          )}
         </Box>
-
-        {showActions && (
-          <Box className="flex justify-end mt-4 space-x-2">
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<CheckCircle size={16} />}
-              onClick={() => onApprove(event._id)}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<XCircle size={16} />}
-              onClick={() => onReject(event._id)}
-            >
-              Reject
-            </Button>
-          </Box>
-        )}
       </CardContent>
     </Card>
   );
