@@ -1,8 +1,8 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material';
-import { CalendarDays, Clock, MapPin, Users, Award, CheckCircle, XCircle } from 'lucide-react';
 
-const EventsPageCard = ({ event, onApprove, onReject, showActions }) => {
+import React from 'react';
+import { CalendarDays, MapPin, Users, Award, CheckCircle, XCircle } from 'lucide-react';
+
+const EventCard = ({ event, onApprove, onReject, showActions }) => {
   const eventDate = new Date(event.date);
 
   const formatDate = (date) => {
@@ -10,99 +10,85 @@ const EventsPageCard = ({ event, onApprove, onReject, showActions }) => {
     return date.toLocaleDateString('en-US', options);
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'approved': return 'bg-green-500';
+      case 'rejected': return 'bg-red-500';
+      default: return 'bg-yellow-500';
+    }
+  };
+
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'town_hall': return 'bg-blue-500';
+      case 'volunteer_opportunity': return 'bg-purple-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
   return (
-    <Card className="flex flex-col sm:flex-row h-full rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl m-5">
-      {/* Left side - Image */}
-      <Box className="sm:w-1/3 h-48 sm:h-auto relative">
+    <div className="max-w-4xl mx-auto overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white flex flex-col sm:flex-row">
+      <div className="sm:w-2/5 relative">
         <img
           src={event.imageUrl || "https://www.eventbrite.ie/blog/wp-content/uploads/2022/09/dance-event-768x511.jpg"}
           alt={event.title}
-          className="w-full h-full object-cover"
+          className="w-full h-48 sm:h-full object-cover"
         />
-        <Chip 
-          label={event.status || "Pending"}
-          color={event.status === 'pending' ? 'warning' : event.status === 'approved' ? 'success' : 'error'}
-          size="small"
-          className="absolute top-2 left-2"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-          <Button
-            variant="contained"
-            color="primary"
-            className="transform hover:scale-105 transition duration-300"
-          >
-            RSVP Now
-          </Button>
+        <span className={`absolute top-2 left-2 px-2 py-1 text-xs font-bold text-white rounded ${getStatusColor(event.status)}`}>
+          {event.status || "Pending"}
+        </span>
+      </div>
+      
+      <div className="sm:w-3/5 p-4 flex flex-col justify-between">
+        <div>
+          <h3 className="text-xl font-bold mb-2 text-gray-800">{event.title}</h3>
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{event.description}</p>
+          
+          <div className="space-y-2 text-sm text-gray-700">
+            <div className="flex items-center">
+              <CalendarDays className="w-4 h-4 mr-2 text-blue-500" />
+              <span>{formatDate(eventDate)}</span>
+            </div>
+            <div className="flex items-center">
+              <MapPin className="w-4 h-4 mr-2 text-blue-500" />
+              <span>{event.location}</span>
+            </div>
+            <div className="flex items-center">
+              <Users className="w-4 h-4 mr-2 text-blue-500" />
+              <span>{event.attendees?.length || 0} / {event.maxAttendees || '∞'} attendees</span>
+            </div>
+            <div className="flex items-center text-green-600 font-semibold">
+              <Award className="w-4 h-4 mr-2" />
+              <span>Earn {event.pointsReward} points for attending!</span>
+            </div>
+          </div>
         </div>
-      </Box>
-
-      {/* Right side - Event Information */}
-      <CardContent className="sm:w-2/3 p-4 flex flex-col justify-between">
-        <Box>
-          <Typography variant="h5" className="font-bold text-gray-800 mb-2">
-            {event.title}
-          </Typography>
-          <Typography variant="body2" className="text-gray-600 mb-3 line-clamp-2">
-            {event.description}
-          </Typography>
-          <Box className="flex items-center mb-1 text-sm text-gray-600">
-            <CalendarDays className="mr-2 text-blue-600" size={16} />
-            <Typography variant="body2">
-              {formatDate(eventDate)}
-            </Typography>
-          </Box>
-          <Box className="flex items-center mb-1 text-sm text-gray-600">
-            <MapPin className="mr-2 text-blue-600" size={16} />
-            <Typography variant="body2">
-              {event.location}
-            </Typography>
-          </Box>
-          <Box className="flex items-center mb-1 text-sm text-gray-600">
-            <Users className="mr-2 text-blue-600" size={16} />
-            <Typography variant="body2">
-              {event.attendees?.length || 0} / {event.maxAttendees || '∞'} attendees
-            </Typography>
-          </Box>
-          <Box className="flex items-center text-sm text-green-600 font-semibold">
-            <Award className="mr-2" size={16} />
-            <Typography variant="body2">
-              Earn {event.pointsReward} points for attending!
-            </Typography>
-          </Box>
-        </Box>
         
-        <Box className="flex justify-between items-center mt-4">
-          <Chip 
-            label={event.type.replace('_', ' ')}
-            color={event.type === 'town_hall' ? 'success' : event.type === 'volunteer_opportunity' ? 'warning' : 'info'}
-            size="small"
-          />
+        <div className="mt-4 flex justify-between items-center">
+          <span className={`px-2 py-1 text-xs font-bold text-white rounded ${getTypeColor(event.type)}`}>
+            {event.type.replace('_', ' ')}
+          </span>
+          
           {showActions && (
-            <Box className="flex space-x-2">
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<CheckCircle size={16} />}
+            <div className="flex space-x-2">
+              <button
                 onClick={() => onApprove(event._id)}
-                size="small"
+                className="flex items-center px-3 py-1 bg-green-500 text-white text-sm font-medium rounded hover:bg-green-600 transition-colors duration-300"
               >
-                Approve
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<XCircle size={16} />}
+                <CheckCircle className="w-4 h-4 mr-1" /> Approve
+              </button>
+              <button
                 onClick={() => onReject(event._id)}
-                size="small"
+                className="flex items-center px-3 py-1 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 transition-colors duration-300"
               >
-                Reject
-              </Button>
-            </Box>
+                <XCircle className="w-4 h-4 mr-1" /> Reject
+              </button>
+            </div>
           )}
-        </Box>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default EventsPageCard;
+export default EventCard;

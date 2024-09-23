@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { Card, CardContent, Typography, Box, TextField, Select, MenuItem, InputLabel, FormControl, Paper, Modal, Fade, Backdrop, Grid, Button } from '@mui/material';
-import { Search, X, Plus } from 'lucide-react';
+import { 
+  Card, 
+  CardContent, 
+  Typography, 
+  TextField, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  FormControl, 
+  Paper, 
+  Modal, 
+  Fade, 
+  Backdrop, 
+  Button 
+} from '@mui/material';
+import { Search, X, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import EventsPageCard from '../components/EventsPageCard';
 import CreateEventModal from '../components/CreateEventModal';
 import '../customCalendar.css';
-
-// Import the CSS for react-big-calendar
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// Set up the localizer for react-big-calendar
 const localizer = momentLocalizer(moment);
 
 const EventPage = () => {
@@ -27,7 +39,6 @@ const EventPage = () => {
   const [createEventModalOpen, setCreateEventModalOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch events from your API
     const fetchEvents = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/events');
@@ -41,6 +52,7 @@ const EventPage = () => {
         setFilteredEvents(formattedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
+        toast.error('Failed to load events. Please try again later.');
       }
     };
     fetchEvents();
@@ -84,7 +96,12 @@ const EventPage = () => {
         opacity: 0.8,
         color: 'white',
         border: '0px',
-        display: 'block'
+        display: 'block',
+        fontSize: '14px',
+        padding: '4px',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
       }
     };
   };
@@ -129,60 +146,69 @@ const EventPage = () => {
       });
 
       if (response.ok) {
-        alert('Event submitted for approval successfully!');
+        toast.success('Your event has been submitted for approval!', {
+          duration: 4000,
+          position: 'top-center',
+        });
+        setCreateEventModalOpen(false);
+        // Optionally, refresh the events list here
       } else {
         throw new Error('Failed to submit event');
       }
     } catch (error) {
       console.error('Error submitting event:', error);
-      alert('Failed to submit event. Please try again.');
+      toast.error('Failed to submit event. Please try again.', {
+        duration: 4000,
+        position: 'top-center',
+      });
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-
-      <main className="flex-grow py-8 max-w-8l mx-auto w-full">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <Toaster />
+      <main className="flex-grow p-8 max-w-7xl mx-auto w-full">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-600">Community Events</h1>
+          <h1 className="text-4xl font-bold text-blue-700">Community Events</h1>
           <Button
             variant="contained"
             color="primary"
             startIcon={<Plus size={20} />}
             onClick={handleCreateEventClick}
-            className="rounded-full"
+            className="rounded-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Create Event
           </Button>
         </div>
 
-        <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: Calendar View */}
-          <div className="w-full lg:w-1/2">
-            <Card className="rounded-lg overflow-hidden shadow-lg">
-              <CardContent className="p-0">
-                <Calendar
-                  localizer={localizer}
-                  events={filteredEvents}
-                  startAccessor="start"
-                  endAccessor="end"
-                  style={{ height: 'calc(100vh - 200px)' }}
-                  eventPropGetter={eventStyleGetter}
-                  views={['month']}
-                  defaultView='month'
-                  onSelectSlot={handleDateSelect}
-                  selectable
-                  className="custom-calendar"
-                />
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="rounded-lg overflow-hidden shadow-xl">
+            <CardContent className="p-0">
+              <Calendar
+                localizer={localizer}
+                events={filteredEvents}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: '600px' }}
+                eventPropGetter={eventStyleGetter}
+                views={['month']}
+                defaultView='month'
+                onSelectSlot={handleDateSelect}
+                selectable
+                className="custom-calendar"
+                components={{
+                  toolbar: CustomToolbar,
+                }}
+              />
+            </CardContent>
+          </Card>
 
           {/* Right Column: Filters and Event Cards */}
-          <div className="w-full lg:w-1/2">
-            {/* Horizontal Filters */}
-            <Paper elevation={3} className="p-4 bg-white rounded-lg shadow-md mb-4">
-              <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 items-center">
+          <div className="space-y-8">
+            {/* Filters */}
+            <Paper elevation={3} className="p-6 bg-white rounded-lg shadow-md">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <TextField
                   variant="outlined"
                   label="Search Events"
@@ -191,9 +217,9 @@ const EventPage = () => {
                   InputProps={{
                     startAdornment: <Search className="mr-2 text-gray-400" size={20} />,
                   }}
-                  className="w-full md:w-auto flex-grow"
+                  fullWidth
                 />
-                <FormControl variant="outlined" className="w-full md:w-auto min-w-[150px]">
+                <FormControl variant="outlined" fullWidth>
                   <InputLabel>Event Type</InputLabel>
                   <Select
                     value={filterType}
@@ -206,7 +232,7 @@ const EventPage = () => {
                     <MenuItem value="volunteer_opportunity">Volunteer Opportunity</MenuItem>
                   </Select>
                 </FormControl>
-                <FormControl variant="outlined" className="w-full md:w-auto min-w-[120px]">
+                <FormControl variant="outlined" fullWidth>
                   <InputLabel>Sort by</InputLabel>
                   <Select
                     value={sortBy}
@@ -220,12 +246,12 @@ const EventPage = () => {
               </div>
             </Paper>
 
-            {/* Event Cards in 2x2 Grid */}
-            <div className="space-y-4">
-  {filteredEvents.map((event) => (
-    <EventsPageCard key={event._id} event={event} />
-  ))}
-</div>
+            {/* Event Cards */}
+            <div className="space-y-6 overflow-y-auto max-h-[500px] pr-4">
+              {filteredEvents.map((event) => (
+                <EventsPageCard key={event._id} event={event} />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -240,17 +266,17 @@ const EventPage = () => {
           }}
         >
           <Fade in={modalOpen}>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
               <button
                 onClick={handleCloseModal}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-300"
               >
                 <X size={24} />
               </button>
               {selectedEvent ? (
                 <EventsPageCard event={selectedEvent} />
               ) : (
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h2" className="text-center text-gray-800">
                   No events on {selectedDate && selectedDate.toDateString()}
                 </Typography>
               )}
@@ -267,6 +293,59 @@ const EventPage = () => {
         
       </main>
       <Footer />
+    </div>
+  );
+};
+
+// Custom Toolbar component for the Calendar
+const CustomToolbar = (toolbar) => {
+  const goToBack = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() - 1);
+    toolbar.onNavigate('prev');
+  };
+
+  const goToNext = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+    toolbar.onNavigate('next');
+  };
+
+  const goToCurrent = () => {
+    const now = new Date();
+    toolbar.date.setMonth(now.getMonth());
+    toolbar.date.setYear(now.getFullYear());
+    toolbar.onNavigate('current');
+  };
+
+  const label = () => {
+    const date = moment(toolbar.date);
+    return (
+      <span className="text-lg font-semibold">{date.format('MMMM YYYY')}</span>
+    );
+  };
+
+  return (
+    <div className="flex items-center justify-between mb-4 px-4 py-2 bg-gray-100 rounded-t-lg">
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={goToBack}
+          className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-300"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <button
+          onClick={goToNext}
+          className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-300"
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
+      <div className="text-gray-800">{label()}</div>
+      <button
+        onClick={goToCurrent}
+        className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300"
+      >
+        Today
+      </button>
     </div>
   );
 };

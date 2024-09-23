@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Paper, Typography, Button, Box, CircularProgress, IconButton, Tooltip, TextField } from '@mui/material';
+import { Grid, Paper, Typography, Button, Box, CircularProgress, IconButton, Tooltip, TextField, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Calendar, CheckCircle, XCircle, AlertTriangle, Award, RefreshCcw, Plus, ArrowLeft } from 'lucide-react';
+import MuiAlert from '@mui/material/Alert';
 
 import { getPendingEvents, getApprovedEvents, getRejectedEvents, approveEvent, rejectEvent, fetchUsers } from '../services/api';
 import AdminLeaderBoard from '../components/AdminLeaderBoard';
@@ -14,13 +15,18 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   display: 'flex',
   flexDirection: 'column',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
   transition: 'box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out',
   '&:hover': {
-    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     transform: 'translateY(-4px)',
   },
+}));
+
+const CenteredStyledPaper = styled(StyledPaper)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 3,
+  backgroundColor: theme.palette.background.default,
 }));
 
 const QuickAccessButton = styled(Button)(({ theme }) => ({
@@ -29,7 +35,7 @@ const QuickAccessButton = styled(Button)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.shape.borderRadius * 2,
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   transition: 'all 0.3s ease-in-out',
@@ -42,6 +48,10 @@ const QuickAccessButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('pending');
   const [events, setEvents] = useState([]);
@@ -51,6 +61,7 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalAction, setModalAction] = useState({ type: '', eventId: '' });
   const [selectedOperation, setSelectedOperation] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
     fetchEvents();
@@ -89,20 +100,29 @@ const AdminDashboard = () => {
     setModalAction({ type, eventId: id });
     setModalOpen(true);
   };
-
   const confirmAction = async (reason = '') => {
     try {
       const actionFunction = modalAction.type === 'approve' ? approveEvent : rejectEvent;
       await actionFunction(modalAction.eventId, reason);
       fetchEvents();
+      setSnackbar({
+        open: true,
+        message: `Event ${modalAction.type === 'approve' ? 'approved' : 'rejected'} successfully`,
+        severity: modalAction.type === 'approve' ? 'success' : 'warning'
+      });
     } catch (error) {
       console.error(`Error ${modalAction.type}ing event:`, error);
+      setSnackbar({
+        open: true,
+        message: `Failed to ${modalAction.type} event`,
+        severity: 'error'
+      });
     }
     setModalOpen(false);
   };
 
   const renderEventCards = () => (
-    <Box sx={{ overflow: 'auto', pr: 2 }}>
+    <Box sx={{ overflow: 'auto', pr: 2, maxHeight: 'calc(100vh - 250px)' }}>
       {events.map((event) => (
         <Box key={event._id} sx={{ mb: 2 }}>
           <EventsPageCard 
@@ -177,20 +197,28 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: 'grey.100', minHeight: '100vh', p: { xs: 2, md: 4 } }}>
+    <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh', p: { xs: 2, md: 4 } }}>
       <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'primary.main', fontWeight: 'bold', mb: 4 }}>
         Admin Dashboard
       </Typography>
       <Grid container spacing={4} alignItems="flex-start">
         {/* Admin Operations and Inactive Users */}
-        <Grid item xs={12} md={3} gap={2}>
-        <AdminOperationsGrid quickAccessItems={quickAccessItems} />
-            <AdminLessActiveUsers users={users.slice(-5).reverse()} />
+        <Grid item xs={12} md={3} container direction="column" spacing={3}>
+          <Grid item>
+           
+              <AdminOperationsGrid quickAccessItems={quickAccessItems} />
+           
+          </Grid>
+          <Grid item>
+           
+              <AdminLessActiveUsers users={users.slice(-5).reverse()} />
+           
+          </Grid>
         </Grid>
 
         {/* Events Display or Selected Operation */}
         <Grid item xs={12} md={6}>
-          <StyledPaper>
+          
             {selectedOperation ? (
               <Box>
                 <Button
@@ -224,12 +252,14 @@ const AdminDashboard = () => {
                 {renderContent()}
               </>
             )}
-          </StyledPaper>
+          
         </Grid>
 
         {/* Leaderboard */}
         <Grid item xs={12} md={3}>
+          
             <AdminLeaderBoard users={users.slice(0, 10)} />
+          
         </Grid>
       </Grid>
       <ConfirmationModal 
@@ -238,6 +268,16 @@ const AdminDashboard = () => {
         onConfirm={confirmAction}
         action={modalAction.type}
       />
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

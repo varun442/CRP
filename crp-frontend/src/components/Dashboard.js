@@ -6,6 +6,7 @@ import {
 import Leaderboard from './LeaderBoard';
 import UpcomingEvents from './UpcomingEvents';
 import { fetchUsers, getEvents } from '../services/api';
+import EnhancedDashboardSections from './EnhancedDashboardSections';
 
 const Dashboard = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -24,8 +25,6 @@ const Dashboard = () => {
         const sortedUsers = userData.sort((a, b) => b.points - a.points);
         setUsers(sortedUsers);
         setEvents(eventsData);
-        console.log(eventsData);
-        
         setLoading(false);
       } catch (err) {
         setError('Failed to load data');
@@ -87,53 +86,11 @@ const Dashboard = () => {
               <UpcomingEvents events={events} />
             )}
 
-            {/* Connect with Neighbors */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Connect with Neighbors</h2>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <button className="flex items-center justify-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                  <Coffee className="w-5 h-5 mr-2" />
-                  Coffee Meetup
-                </button>
-                <button className="flex items-center justify-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300">
-                  <HandHeart className="w-5 h-5 mr-2" />
-                  Volunteer
-                </button>
-              </div>
-              <p className="text-sm text-gray-600">
-                Join our community activities and get to know your neighbors!
-              </p>
-            </div>
-
-            {/* Neighborhood Issues */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Neighborhood Issues</h2>
-                <button className="text-blue-600 hover:text-blue-800">
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
-              <ul className="space-y-4 mb-4">
-                {neighborhoodIssues.map((issue) => (
-                  <li key={issue.id} className="flex items-start">
-                    <div className="bg-red-100 rounded-full p-2 mr-4">
-                      <AlertTriangle className="w-5 h-5 text-red-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{issue.title}</h3>
-                      <p className="text-sm text-gray-600">Status: {issue.status}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                Report an Issue
-              </button>
-            </div>
+            <EnhancedDashboardSections/>
           </div>
 
+          {/* Leaderboard */}
           <Leaderboard users={users} loading={loading} error={error} />
-
         </div>
       </div>
     </div>
