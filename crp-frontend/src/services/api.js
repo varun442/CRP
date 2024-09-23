@@ -50,6 +50,7 @@ export const login = async (email, password) => {
         throw error;
     }
 };
+
 export const signup = async (userData) => {
     try {
         const response = await api.post("/users/signup", userData);
@@ -58,11 +59,13 @@ export const signup = async (userData) => {
         throw error.response.data;
     }
 };
+
 export const getEvents = async () => {
     const response = await api.get("/events");
     console.log(response);
     return response.data;
 };
+
 export const createEvent = async (eventData) => {
     const response = await api.post("/events", eventData);
     return response.data;

@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const API_KEY = process.env.REACT_APP_GOOGLE;
 
 if (!API_KEY) {
   console.error("API key is missing. Please check your .env.local file.");
