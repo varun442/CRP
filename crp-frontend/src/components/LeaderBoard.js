@@ -16,7 +16,7 @@ const LeaderboardPodium = ({ users }) => (
         <Medal className="w-8 h-8 text-gray-600" />
       </div>
       <div className="bg-gray-200 p-4 rounded-t-lg w-28 flex flex-col items-center">
-        <TruncatedName name={users[1].fullName} className="text-lg font-bold w-full text-center" />
+        <TruncatedName name={users[1].fullName.split(' ')[0]} className="text-lg font-bold w-full text-center" />
         <span className="text-sm">{users[1].points} pts</span>
       </div>
       <div className="bg-gray-300 p-2 w-28 text-center font-bold">2nd</div>
@@ -28,7 +28,7 @@ const LeaderboardPodium = ({ users }) => (
         <Trophy className="w-10 h-10 text-yellow-600" />
       </div>
       <div className="bg-yellow-200 p-4 rounded-t-lg w-32 flex flex-col items-center">
-        <TruncatedName name={users[0].fullName} className="text-xl font-bold w-full text-center" />
+        <TruncatedName name={users[0].fullName.split(' ')[0]} className="text-xl font-bold w-full text-center" />
         <span className="text-sm">{users[0].points} pts</span>
       </div>
       <div className="bg-yellow-300 p-3 w-32 text-center font-bold">1st</div>
@@ -40,7 +40,7 @@ const LeaderboardPodium = ({ users }) => (
         <Medal className="w-6 h-6 text-orange-600" />
       </div>
       <div className="bg-orange-200 p-4 rounded-t-lg w-24 flex flex-col items-center">
-        <TruncatedName name={users[2].fullName} className="text-base font-bold w-full text-center" />
+        <TruncatedName name={users[2].fullName.split(' ')[0]} className="text-base font-bold w-full text-center" />
         <span className="text-sm">{users[2].points} pts</span>
       </div>
       <div className="bg-orange-300 p-1 w-24 text-center font-bold">3rd</div>
@@ -56,7 +56,7 @@ const LeaderboardList = ({ users }) => (
           <User className="w-5 h-5 text-blue-600" />
         </div>
         <div className="flex-grow min-w-0">
-          <TruncatedName name={user.fullName} className="font-medium" />
+          <TruncatedName name={user.fullName.split(' ')[0]} className="font-medium" />
           <p className="text-sm text-gray-600">{user.points} points</p>
         </div>
         <span className="text-xl font-bold text-blue-600 flex-shrink-0">#{index + 4}</span>

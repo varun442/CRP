@@ -50,7 +50,9 @@ const Dashboard = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-8">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-blue-500">Welcome, User</h1>
+        <h2 className="text-2xl font-extrabold mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-cyan-950 to-cyan-500 tracking-wide font-serif">
+          Welcome, {JSON.parse(localStorage.getItem('user')).fullName}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-8">
             {/* Quick Access */}

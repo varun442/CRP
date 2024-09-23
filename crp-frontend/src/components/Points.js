@@ -27,7 +27,7 @@ const PointsManagement = () => {
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [pointsData, setPointsData] = useState([]);
-    const [currentUserId, setCurrentUserId] = useState('66f0d834e684e4f4969b0986');
+    const [currentUserId, setCurrentUserId] = useState(JSON.parse(localStorage.getItem('user')).id);
     const [communityRecognitions, setCommunityRecognitions] = useState([]);
     const [personalRecognitions, setPersonalRecognitions] = useState([]);
     const [recognitionsPage, setRecognitionsPage] = useState(1);
