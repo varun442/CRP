@@ -16,6 +16,10 @@ The mission of The Community Restoration Project is to provide families and indi
 - Resource sharing platform
 - Safe space for community members
 - Simple ways to connect with neighbors (e.g., coffee meetups)
+### Screenshots 
+
+https://github.com/varun442/CRP/tree/main/crp-frontend/screenshots
+
 
 ## Getting Started
 
